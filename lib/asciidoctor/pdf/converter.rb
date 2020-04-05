@@ -2148,6 +2148,7 @@ module Asciidoctor
         theme_margin :block, :top
 
         left_padding = right_padding = nil
+        begin
         table table_data, table_settings do
           # NOTE: call width to capture resolved table width
           table_width = width
@@ -2219,6 +2220,10 @@ module Asciidoctor
             #  foot_row.each {|c| c.content = (transform_text c.content, foot_transform) if c.content }
             #end
           end
+        end
+        rescue Exception => e
+          logger.error %(error when generating table (at approx line no #{node.source_location}): #{e.class} - #{e.message})
+          raise e
         end
         if left_padding
           bounds.subtract_left_padding left_padding
